@@ -2,7 +2,9 @@
 {
 	public class SentenceValidator
 	{
-		private readonly string sentence;
+		private readonly string sentence = string.Empty;
+
+		public SentenceValidator() { }
 
 		public SentenceValidator(string sentence)
 		{
@@ -21,17 +23,17 @@
 			return false;
         }
 
-		private bool StringStartsWithCapital(string word)
+		public bool StringStartsWithCapital(string word)
         {
 			return false;
         }
 
-		private bool ListEndsWithPeriod(List<string> sentence)
+		public bool ListEndsWithPeriod(List<string> sentence)
         {
 			return false;
         }
 
-		private bool ListHasEvenQuotations(List<string> sentence)
+		public bool ListHasEvenQuotations(List<string> sentence)
         {
 			return false;
         }
