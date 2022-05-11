@@ -22,7 +22,7 @@ public class Tests
     }
 
     [TestCase("123")]
-    [TestCase("O_)()%676")]
+    [TestCase("0_)()%676")]
     [TestCase("")]
     [TestCase("!One MORE for luck! :)")]
     public void StringStartsWithCapital_Test_False_Success(string validCapitalSentence)
@@ -32,68 +32,48 @@ public class Tests
     }
 
     [Test]
-    public void ListEndsWithPeriod_Test_True_Success()
+    [TestCase("!One MORE for luck! :).")]
+    [TestCase("Pass.")]
+    [TestCase("... ... ...")]
+    [TestCase("The quick brown fox!")]
+    [TestCase("What do you mean?")]
+    public void ListEndsWithPeriod_Test_True_Success(string input)
     {
         var sentenceValidator = new SentenceValidator.SentenceValidator();
-        var validList1 = new List<string> { "The", "Quick", "Brown", "Fox", "." };
-        Assert.True(sentenceValidator.ListEndsWithPeriod(validList1));
-
-        var validList2 = new List<string> { ".", ".", "." };
-        Assert.True(sentenceValidator.ListEndsWithPeriod(validList2));
-
-        var validList3 = new List<string> { "No", "WAY", "!" };
-        Assert.True(sentenceValidator.ListEndsWithPeriod(validList3));
-
-        var validList4 = new List<string> { "What", "do", "mean", "here", "?" };
-        Assert.True(sentenceValidator.ListEndsWithPeriod(validList4));
+        Assert.True(sentenceValidator.ListEndsWithPeriod(input));
     }
 
     [Test]
-    public void ListEndsWithPeriod_Test_False_Success()
+    [TestCase("!One MORE for luck! :)")]
+    [TestCase("Pass--")]
+    [TestCase("http/")]
+    [TestCase("The quick brown fox")]
+    [TestCase("What do you mean[]")]
+    [TestCase("  ")]
+    public void ListEndsWithPeriod_Test_False_Success(string input)
     {
         var sentenceValidator = new SentenceValidator.SentenceValidator();
-        var invalidList1 = new List<string> { "The", "Quick", "Brown", "Fox"};
-        Assert.False(sentenceValidator.ListEndsWithPeriod(invalidList1));
-
-        var invalidList2 = new List<string> { "", " ", "   " };
-        Assert.False(sentenceValidator.ListEndsWithPeriod(invalidList2));
-
-        var invalidList3 = new List<string> { "No", "WAY", "," };
-        Assert.False(sentenceValidator.ListEndsWithPeriod(invalidList3));
-
-        var invalidList4 = new List<string> { "What", "do", "mean", "here", "123" };
-        Assert.False(sentenceValidator.ListEndsWithPeriod(invalidList4));
+        Assert.False(sentenceValidator.ListEndsWithPeriod(input));
     }
 
     [Test]
-    public void ListHasEvenQuotations_Test_True_Success()
+    [TestCase("No quotes here sir")]
+    [TestCase("He said \"ok\"")]
+    [TestCase("\"is that right now\"")]
+    [TestCase("\"\"\"\"\"\"")]
+    public void ListHasEvenQuotations_Test_True_Success(string input)
     {
         var sentenceValidator = new SentenceValidator.SentenceValidator();
-        var validList1 = new List<string> { "He", "said", "\"", "ok", "\""};
-        Assert.False(sentenceValidator.ListHasEvenQuotations(validList1));
-
-        var validList2 = new List<string> { "\"", "Is", "that", "right", "now", "\"" };
-        Assert.False(sentenceValidator.ListHasEvenQuotations(validList2));
-
-        var validList3 = new List<string> { "\"No\"", "\"Thank", "you\"" };
-        Assert.False(sentenceValidator.ListHasEvenQuotations(validList3));
-
-        var validList4 = new List<string> { "\"", "\"", "\"", "\"", "\"" };
-        Assert.False(sentenceValidator.ListHasEvenQuotations(validList4));
-
-        var validList5 = new List<string> { "No", "quotes", "found", "here", "\"" };
-        Assert.False(sentenceValidator.ListHasEvenQuotations(validList5));
+        Assert.True(sentenceValidator.ListHasEvenQuotations(input));
     }
 
     [Test]
-    public void ListHasEvenQuotations_Test_False_Success()
+    [TestCase("\"One MORE for luck! :)")]
+    [TestCase("what he said was \"")]
+    public void ListHasEvenQuotations_Test_False_Success(string input)
     {
         var sentenceValidator = new SentenceValidator.SentenceValidator();
-        var invalidList1 = new List<string> { "\""};
-        Assert.False(sentenceValidator.ListHasEvenQuotations(invalidList1));
-
-        var invalidList2 = new List<string> { "\"","he", "said", "," };
-        Assert.False(sentenceValidator.ListHasEvenQuotations(invalidList2));
+        Assert.False(sentenceValidator.ListHasEvenQuotations(input));
 
     }
 
@@ -102,19 +82,19 @@ public class Tests
     {
         var sentenceValidator = new SentenceValidator.SentenceValidator();
         var validList1 = new List<string> { "He", "said", "\"", "twelve", "\"" };
-        Assert.False(sentenceValidator.IsCorrectNumberFormat(validList1));
+        Assert.True(sentenceValidator.IsCorrectNumberFormat(validList1));
 
         var validList2 = new List<string> { "One", "more", "sleep", "right", "now", "\"" };
-        Assert.False(sentenceValidator.IsCorrectNumberFormat(validList2));
+        Assert.True(sentenceValidator.IsCorrectNumberFormat(validList2));
 
         var validList3 = new List<string> { "One", "Two", "Three" };
-        Assert.False(sentenceValidator.IsCorrectNumberFormat(validList3));
+        Assert.True(sentenceValidator.IsCorrectNumberFormat(validList3));
 
         var validList4 = new List<string> { "Four", "times", "five", "is", "20" };
-        Assert.False(sentenceValidator.IsCorrectNumberFormat(validList4));
+        Assert.True(sentenceValidator.IsCorrectNumberFormat(validList4));
 
         var validList5 = new List<string> { "No", "quotes", "found", "here", "\"" };
-        Assert.False(sentenceValidator.IsCorrectNumberFormat(validList5));
+        Assert.True(sentenceValidator.IsCorrectNumberFormat(validList5));
     }
 
     [Test]

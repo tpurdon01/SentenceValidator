@@ -1,4 +1,6 @@
-﻿namespace SentenceValidator
+﻿using System.Text.RegularExpressions;
+
+namespace SentenceValidator
 {
 	public class SentenceValidator
 	{
@@ -16,36 +18,54 @@
         {
 			var listOfWords = DecomposeSentenceToList(this.sentence);
 			if (StringStartsWithCapital(listOfWords.FirstOrDefault()) &&
-				ListEndsWithPeriod(listOfWords) &&
-				ListHasEvenQuotations(listOfWords) &&
+				ListEndsWithPeriod(listOfWords.LastOrDefault()) &&
+				ListHasEvenQuotations(sentence) &&
 				IsCorrectNumberFormat(listOfWords))
 				return true;
 			return false;
         }
 
-		public bool StringStartsWithCapital(string word)
+		public bool StringStartsWithCapital(string firstWord)
         {
+			var firstLetterInWord = firstWord.ToCharArray()[0];
+			if (Char.IsUpper(firstLetterInWord))
+				return true;
 			return false;
         }
 
-		public bool ListEndsWithPeriod(List<string> sentence)
+		public bool ListEndsWithPeriod(string lastWord)
         {
+			var lastWordChars = lastWord.ToCharArray();
+			var lastChar = lastWordChars.LastOrDefault();
+
+			// could replace with regex
+			if (lastChar == '.' || lastChar == '!' || lastChar == '?')
+				return true;
+
 			return false;
         }
 
-		public bool ListHasEvenQuotations(List<string> sentence)
+		public bool ListHasEvenQuotations(string sentence)
         {
-			return false;
+			var rx = new Regex("\"");
+			return rx.Matches(sentence).Count % 2 == 0;
         }
 
-		private bool IsCorrectNumberFormat(List<string> sentence)
+		public bool IsCorrectNumberFormat(List<string> sentence)
         {
-			return false;
+			foreach (var word in sentence)
+				// TODO: Extract to another method
+				foreach (var character in word.ToCharArray())
+					if (Char.IsNumber(character))
+						if (int.TryParse(character.ToString(), out int number))
+							// TODO: check criteria for this
+							if (number < 13) return false;
+			return true;
         }
 
-		private List<string> DecomposeSentenceToList(string sentance)
+		private List<string> DecomposeSentenceToList(string sentence)
         {
-			return new List<string> { "" };
+			return sentence.Split(" ").ToList();
         }
 	}
 }
