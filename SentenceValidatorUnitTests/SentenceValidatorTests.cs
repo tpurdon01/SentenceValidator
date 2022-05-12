@@ -37,6 +37,7 @@ public class Tests
     [TestCase("... ... ...")]
     [TestCase("The quick brown fox!")]
     [TestCase("What do you mean?")]
+    [TestCase("Did we account for \"this?\"")]
     public void ListEndsWithPeriod_Test_True_Success(string input)
     {
         var sentenceValidator = new SentenceValidator.SentenceValidator();
@@ -50,6 +51,7 @@ public class Tests
     [TestCase("The quick brown fox")]
     [TestCase("What do you mean[]")]
     [TestCase("  ")]
+    [TestCase("")]
     public void ListEndsWithPeriod_Test_False_Success(string input)
     {
         var sentenceValidator = new SentenceValidator.SentenceValidator();
@@ -61,6 +63,8 @@ public class Tests
     [TestCase("He said \"ok\"")]
     [TestCase("\"is that right now\"")]
     [TestCase("\"\"\"\"\"\"")]
+    [TestCase("What do you mean by \"this\"?")]
+    [TestCase("")]
     public void ListHasEvenQuotations_Test_True_Success(string input)
     {
         var sentenceValidator = new SentenceValidator.SentenceValidator();
@@ -70,6 +74,7 @@ public class Tests
     [Test]
     [TestCase("\"One MORE for luck! :)")]
     [TestCase("what he said was \"")]
+    [TestCase("\"")]
     public void ListHasEvenQuotations_Test_False_Success(string input)
     {
         var sentenceValidator = new SentenceValidator.SentenceValidator();
@@ -93,7 +98,7 @@ public class Tests
         var validList4 = new List<string> { "Four", "times", "five", "is", "20" };
         Assert.True(sentenceValidator.IsCorrectNumberFormat(validList4));
 
-        var validList5 = new List<string> { "No", "quotes", "found", "here", "\"" };
+        var validList5 = new List<string> { "No", "numbers", "found", "here", "\"" };
         Assert.True(sentenceValidator.IsCorrectNumberFormat(validList5));
     }
 
@@ -106,6 +111,9 @@ public class Tests
 
         var invalidList2 = new List<string> { "four", "times", "5", "is", "20" };
         Assert.False(sentenceValidator.IsCorrectNumberFormat(invalidList2));
+
+        var invalidList3 = new List<string>(); ;
+        Assert.False(sentenceValidator.IsCorrectNumberFormat(invalidList3));
 
     }
 }
