@@ -5,6 +5,10 @@ namespace SentenceValidator
 	public class SentenceValidator
 	{
 		private readonly string sentence = string.Empty;
+		public readonly string invalidCapitals = " Sentence does not start with a capital. \n";
+		public readonly string invalidPeriods = " Sentence has incorrect ending puncuation \n";
+		public readonly string invalidQuotes = " Uneven number of quotations \n";
+		public readonly string invalidNumericFormat = " Incorrect number format \n";
 
 		public SentenceValidator() { }
 
@@ -25,25 +29,25 @@ namespace SentenceValidator
 			if (!StringStartsWithCapital(listOfWords.FirstOrDefault()))
 			{
 				result.IsSentenceValid = false;
-                result.ValidationMessage += " Sentence does not start with a capital. \n";
+                result.ValidationMessage += invalidCapitals;
 			}
 
 			if (!ListEndsWithPeriod(listOfWords.LastOrDefault()))
             {
 				result.IsSentenceValid = false;
-				result.ValidationMessage += " Sentence has incorrect ending puncuation \n";
+				result.ValidationMessage += invalidPeriods;
 
 			}
 			if (!ListHasEvenQuotations(sentence))
             {
 				result.IsSentenceValid = false;
-				result.ValidationMessage += " Uneven number of quotations \n";
+				result.ValidationMessage += invalidQuotes;
 			}
 
 			if (!IsCorrectNumberFormat(listOfWords))
             {
 				result.IsSentenceValid = false;
-				result.ValidationMessage += " Incorrect number format \n";
+				result.ValidationMessage += invalidNumericFormat;
 			}
 
 			return result;
@@ -54,7 +58,11 @@ namespace SentenceValidator
         {
 			if (firstWord == string.Empty) return false;
 			var firstLetterInWord = firstWord.ToCharArray()[0];
-			if (Char.IsUpper(firstLetterInWord))
+			var secondLetterInWord = firstLetterInWord;
+			if (firstWord.Length > 1) secondLetterInWord = firstWord.ToCharArray()[1];
+			// Account for sentences begining with quotes.
+			if (Char.IsUpper(firstLetterInWord) ||
+				(firstLetterInWord == '"' && Char.IsUpper(secondLetterInWord)))
 				return true;
 			return false;
         }
@@ -80,16 +88,21 @@ namespace SentenceValidator
 
 		public bool IsCorrectNumberFormat(List<string> sentence)
         {
+			var rx = new Regex(@"\d+");
 			if(sentence.Count() > 0 )
             {
 				foreach (var word in sentence)
-					if (int.TryParse(word.ToString(), out int number))
+                {
+					// removing all puncuation from a word to allow for '20, 10' for example
+					var processableWord = Regex.Replace(word, @"[^\w\d\s]", "");
+					// char needs converted to a string to try parse it to an int
+					if (int.TryParse(processableWord.ToString(), out int number))
 						if (number < 13) return false;
+				}
 				return true;
-			} else
-            {
+			} else {
 				return false;
-            }
+           }
 			
         }
 

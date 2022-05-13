@@ -26,7 +26,7 @@ public class Tests
         var newValidator = new SentenceValidator.SentenceValidator(validCapitalSentence);
         var validationInfo = newValidator.IsSentenceValid();
         Assert.False(validationInfo.IsSentenceValid);
-        Assert.AreEqual(" Sentence does not start with a capital. \n", validationInfo.ValidationMessage);
+        Assert.AreEqual(newValidator.invalidCapitals, validationInfo.ValidationMessage);
     }
 
     [TestCase("\"The quick brown fox said \"hello Mr Lazy dog\".")]
@@ -35,17 +35,16 @@ public class Tests
         var newValidator = new SentenceValidator.SentenceValidator(validCapitalSentence);
         var validationInfo = newValidator.IsSentenceValid();
         Assert.False(validationInfo.IsSentenceValid);
-        Assert.AreEqual(" Uneven number of quotations \n", validationInfo.ValidationMessage);
+        Assert.AreEqual(newValidator.invalidQuotes, validationInfo.ValidationMessage);
     }
 
     [TestCase("There is no punctuation in this sentence")]
-    [TestCase("\"The quick brown fox said \"hello Mr. Lazy dog\".")]
     public void IsSentenceValid_Test_False_Periods(string validCapitalSentence)
     {
         var newValidator = new SentenceValidator.SentenceValidator(validCapitalSentence);
         var validationInfo = newValidator.IsSentenceValid();
         Assert.False(validationInfo.IsSentenceValid);
-        Assert.AreEqual(" Sentence has incorrect ending puncuation \n", validationInfo.ValidationMessage);
+        Assert.AreEqual(newValidator.invalidPeriods, validationInfo.ValidationMessage);
     }
 
     [TestCase("One lazy dog is too few, 12 is too many.")]
@@ -55,7 +54,7 @@ public class Tests
         var newValidator = new SentenceValidator.SentenceValidator(validCapitalSentence);
         var validationInfo = newValidator.IsSentenceValid();
         Assert.False(validationInfo.IsSentenceValid);
-        Assert.AreEqual(" Incorrect number format \n", validationInfo.ValidationMessage);
+        Assert.AreEqual(newValidator.invalidNumericFormat, validationInfo.ValidationMessage);
     }
 
     [TestCase("Hello")]
