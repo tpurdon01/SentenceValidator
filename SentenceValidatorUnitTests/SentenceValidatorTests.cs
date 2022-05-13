@@ -5,19 +5,65 @@ namespace SentenceValidatorUnitTests;
 
 public class Tests
 {
-    [SetUp]
-    public void Setup()
+
+    SentenceValidator.SentenceValidator sentenceValidator = new SentenceValidator.SentenceValidator();
+
+    [TestCase("The quick brown fox said \"hello Mr Lazy dog\".")]
+    [TestCase("The quick brown fox said hello Mr lazy dog.")]
+    [TestCase("One lazy dog is too few, 13 is too many.")]
+    [TestCase("One lazy dog is too few, thirteen is too many.")]
+    public void IsSentenceValid_Test_True(string validCapitalSentence)
     {
+        var newValidator = new SentenceValidator.SentenceValidator(validCapitalSentence);
+        var validationInfo = newValidator.IsSentenceValid();
+        Assert.True(validationInfo.IsSentenceValid);
+        Assert.Null(validationInfo.ValidationMessage);
     }
 
-    [Test]
+    [TestCase("the quick brown fox said \"hello Mr lazy dog\".")]
+    public void IsSentenceValid_Test_False_Capitals(string validCapitalSentence)
+    {
+        var newValidator = new SentenceValidator.SentenceValidator(validCapitalSentence);
+        var validationInfo = newValidator.IsSentenceValid();
+        Assert.False(validationInfo.IsSentenceValid);
+        Assert.AreEqual(" Sentence does not start with a capital. \n", validationInfo.ValidationMessage);
+    }
+
+    [TestCase("\"The quick brown fox said \"hello Mr Lazy dog\".")]
+    public void IsSentenceValid_Test_False_Quotes(string validCapitalSentence)
+    {
+        var newValidator = new SentenceValidator.SentenceValidator(validCapitalSentence);
+        var validationInfo = newValidator.IsSentenceValid();
+        Assert.False(validationInfo.IsSentenceValid);
+        Assert.AreEqual(" Uneven number of quotations \n", validationInfo.ValidationMessage);
+    }
+
+    [TestCase("There is no punctuation in this sentence")]
+    [TestCase("\"The quick brown fox said \"hello Mr. Lazy dog\".")]
+    public void IsSentenceValid_Test_False_Periods(string validCapitalSentence)
+    {
+        var newValidator = new SentenceValidator.SentenceValidator(validCapitalSentence);
+        var validationInfo = newValidator.IsSentenceValid();
+        Assert.False(validationInfo.IsSentenceValid);
+        Assert.AreEqual(" Sentence has incorrect ending puncuation \n", validationInfo.ValidationMessage);
+    }
+
+    [TestCase("One lazy dog is too few, 12 is too many.")]
+    [TestCase("Are there 11, 12, or 13 lazy dogs?")]
+    public void IsSentenceValid_Test_False_Numbers(string validCapitalSentence)
+    {
+        var newValidator = new SentenceValidator.SentenceValidator(validCapitalSentence);
+        var validationInfo = newValidator.IsSentenceValid();
+        Assert.False(validationInfo.IsSentenceValid);
+        Assert.AreEqual(" Incorrect number format \n", validationInfo.ValidationMessage);
+    }
+
     [TestCase("Hello")]
     [TestCase("I")]
     [TestCase("Capital")]
     [TestCase("Can it handle more than one word")]
     public void StringStartsWithCapital_Test_True_Success(string validCapitalSentence)
     {
-        var sentenceValidator = new SentenceValidator.SentenceValidator(); ;
         Assert.True(sentenceValidator.StringStartsWithCapital(validCapitalSentence));
     }
 
@@ -27,7 +73,6 @@ public class Tests
     [TestCase("!One MORE for luck! :)")]
     public void StringStartsWithCapital_Test_False_Success(string validCapitalSentence)
     {
-        var sentenceValidator = new SentenceValidator.SentenceValidator(); ;
         Assert.False(sentenceValidator.StringStartsWithCapital(validCapitalSentence));
     }
 
@@ -40,7 +85,6 @@ public class Tests
     [TestCase("Did we account for \"this?\"")]
     public void ListEndsWithPeriod_Test_True_Success(string input)
     {
-        var sentenceValidator = new SentenceValidator.SentenceValidator();
         Assert.True(sentenceValidator.ListEndsWithPeriod(input));
     }
 
@@ -54,7 +98,6 @@ public class Tests
     [TestCase("")]
     public void ListEndsWithPeriod_Test_False_Success(string input)
     {
-        var sentenceValidator = new SentenceValidator.SentenceValidator();
         Assert.False(sentenceValidator.ListEndsWithPeriod(input));
     }
 
@@ -67,7 +110,6 @@ public class Tests
     [TestCase("")]
     public void ListHasEvenQuotations_Test_True_Success(string input)
     {
-        var sentenceValidator = new SentenceValidator.SentenceValidator();
         Assert.True(sentenceValidator.ListHasEvenQuotations(input));
     }
 
@@ -77,7 +119,6 @@ public class Tests
     [TestCase("\"")]
     public void ListHasEvenQuotations_Test_False_Success(string input)
     {
-        var sentenceValidator = new SentenceValidator.SentenceValidator();
         Assert.False(sentenceValidator.ListHasEvenQuotations(input));
 
     }
@@ -85,7 +126,6 @@ public class Tests
     [Test]
     public void IsCorrectNumberFormat_Test_True_Success()
     {
-        var sentenceValidator = new SentenceValidator.SentenceValidator();
         var validList1 = new List<string> { "He", "said", "\"", "twelve", "\"" };
         Assert.True(sentenceValidator.IsCorrectNumberFormat(validList1));
 
@@ -105,7 +145,6 @@ public class Tests
     [Test]
     public void IsCorrectNumberFormat_Test_False_Success()
     {
-        var sentenceValidator = new SentenceValidator.SentenceValidator();
         var invalidList1 = new List<string> { "1", "12", "Sheep" };
         Assert.False(sentenceValidator.IsCorrectNumberFormat(invalidList1));
 

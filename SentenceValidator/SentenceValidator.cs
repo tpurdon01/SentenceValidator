@@ -13,46 +13,40 @@ namespace SentenceValidator
             this.sentence = sentence;
 		}
 
-		// change this so method returns a validation message
 		public SentenceValidationInformation IsSentenceValid()
         {
-			var isValid = false;
-			var outputMsg = string.Empty;
+			// Result to be returned to the program.
+            // Assuming that the sentence is valid unless proven otherwise.
+			var result = new SentenceValidationInformation();
+			result.IsSentenceValid = true;
 
 			var listOfWords = DecomposeSentenceToList(this.sentence);
 
-			if (StringStartsWithCapital(listOfWords.FirstOrDefault()))
-            {
-				if (ListEndsWithPeriod(listOfWords.LastOrDefault()))
-				{
-					if (ListHasEvenQuotations(sentence))
-					{
-						if (IsCorrectNumberFormat(listOfWords))
-						{
-							outputMsg = "Sentence is valid!";
-							isValid = true;
-						} else
-                        {
-							outputMsg = "Incorrect number format";
-                        }
-					} else
-                    {
-						outputMsg = "Uneven number of quotations";
-                    }
-				} else
-                {
-					outputMsg = "Sentence has incorrect ending puncuation";
-                }
-			} else
-            {
-				outputMsg = " Sentence does not start with a capital";
-            }
-
-			return new SentenceValidationInformation
+			if (!StringStartsWithCapital(listOfWords.FirstOrDefault()))
 			{
-				IsSentenceValid = isValid,
-				ValidationMessage = outputMsg
-			};
+				result.IsSentenceValid = false;
+                result.ValidationMessage += " Sentence does not start with a capital. \n";
+			}
+
+			if (!ListEndsWithPeriod(listOfWords.LastOrDefault()))
+            {
+				result.IsSentenceValid = false;
+				result.ValidationMessage += " Sentence has incorrect ending puncuation \n";
+
+			}
+			if (!ListHasEvenQuotations(sentence))
+            {
+				result.IsSentenceValid = false;
+				result.ValidationMessage += " Uneven number of quotations \n";
+			}
+
+			if (!IsCorrectNumberFormat(listOfWords))
+            {
+				result.IsSentenceValid = false;
+				result.ValidationMessage += " Incorrect number format \n";
+			}
+
+			return result;
 
         }
 
@@ -90,7 +84,7 @@ namespace SentenceValidator
             {
 				foreach (var word in sentence)
 					if (int.TryParse(word.ToString(), out int number))
-						if (number <= 13) return false;
+						if (number < 13) return false;
 				return true;
 			} else
             {
