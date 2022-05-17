@@ -22,7 +22,6 @@ do
             Console.WriteLine("----------------------");
             Console.WriteLine("Would you like to validate another sentence? (y/n)");
             cont = Console.ReadLine();
-            continue;
         }
         else
         {
